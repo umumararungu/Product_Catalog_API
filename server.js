@@ -4,9 +4,13 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
-
+const multer = require("multer");
+const upload = multer({ dest: 'uploads/' });
+const path = require ('path')
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Middleware
 app.use(cors());
@@ -51,9 +55,12 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/productCa
 // Routes
 const productRoutes = require('./routes/productRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/users', userRoutes);
+
 
 // Basic route
 app.get('/', (req, res) => {

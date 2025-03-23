@@ -53,12 +53,13 @@ router.post('/', async (req, res) => {
  *               items:
  *                 $ref: '#/components/schemas/Category'
  */
-router.get('/', async (req, res) => {
+
+router.get("/", async (req, res) => {
   try {
-    const categories = await Category.find();
-    res.send(categories);
+    const categories = await Category.find().select("name -_id"); 
+    res.json(categories.map(cat => cat.name));
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).json({ error: error.message });
   }
 });
 

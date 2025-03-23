@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Information</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-5">
+    <h1 class="mb-4">Product Information</h1>
+
+    <div id="productInfo" class="d-flex">
+        <!-- Image on the left -->
+        <div class="me-3">
+            <img id="productImage" src="" alt="Product Image" class="img-fluid" style="max-width: 250px;">
+        </div>
+    
+        <!-- Product Details -->
+        <div>
+            <h5 id="productName"></h5>
+            <p id="productDescription"></p>
+            <p><strong>Price:</strong> $<span id="productPrice"></span></p>
+            <p><strong>Stock:</strong> <span id="productStock"></span></p>
+            <p><strong>Category:</strong> <span id="productCategory"></span></p>
+        </div>
+    </div>
+    
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+    
+        async function fetchProductInfo() {
+            if (!productId) {
+                document.getElementById("productInfo").innerHTML = "<p>Product not found.</p>";
+                return;
+            }
+    
+            try {
+                const response = await fetch(`http://localhost:5000/api/products/${productId}`);
+                const product = await response.json();
+    
+                if (!product) {
+                    document.getElementById("productInfo").innerHTML = "<p>Product not found.</p>";
+                    return;
+                }
+    
+                // Populate product details
+                document.getElementById("productImage").src = product.image;
+                document.getElementById("productName").textContent = product.name;
+                document.getElementById("productDescription").textContent = product.description;
+                document.getElementById("productPrice").textContent = product.price;
+                document.getElementById("productStock").textContent = product.stockCount;
+                document.getElementById("productCategory").textContent = product.category;
+    
+            } catch (error) {
+                document.getElementById("productInfo").innerHTML = "<p>Failed to load product information.</p>";
+                console.error(error);
+            }
+        }
+    
+        fetchProductInfo();
+    </script>
+    
+</body>
+</html>
